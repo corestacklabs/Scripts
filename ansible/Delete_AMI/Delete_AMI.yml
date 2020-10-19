@@ -1,0 +1,17 @@
+---
+
+- name: playbook for Deregister AMI
+  hosts: all
+  connection: local
+  gather_facts: false
+  become: yes
+
+  tasks:
+  - name: Deregister AMI (delete associated snapshots too)
+    amazon.aws.ec2_ami:
+      image_id: '{{ scale_set_ami_id }}'
+      region: '{{ aws_region }}'
+      aws_access_key: '{{ aws_access_key }}'
+      aws_secret_key: '{{ aws_secret_key }}'
+      delete_snapshot: True
+      state: absent
