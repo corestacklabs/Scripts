@@ -1,0 +1,29 @@
+---
+
+- name: playbook for Terminate Instance By Tag
+  hosts: all
+  connection: local
+  gather_facts: false
+  become: yes
+
+  tasks:
+  - name: Filter VM Based On Tag
+    community.aws.ec2_instance_info:
+      filters:
+        "tag:Name": '{{ aws_name_tag_value }}'
+      region: '{{ aws_region }}'
+      aws_access_key: '{{ aws_access_key }}'
+      aws_secret_key: '{{ aws_secret_key }}'
+    register: instance_info
+
+  - name: Fetching Instance ID
+    set_fact:
+      instance_id={{ instance_info | json_query('instances[*].instance_id') | join }}
+
+  - name: Terminate instance by Tag
+    amazon.aws.ec2:
+      state: 'absent'
+      instance_ids: '{{ instance_id }}'
+      region: '{{ aws_region }}'
+      aws_access_key: '{{ aws_access_key }}'
+      aws_secret_key: '{{ aws_secret_key }}'

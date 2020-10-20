@@ -1,0 +1,33 @@
+---
+
+- name: playbook for Deregister Target
+  hosts: all
+  connection: local
+  gather_facts: false
+  become: yes
+
+  tasks:
+  - name: Filter VM Based On Tag
+    community.aws.ec2_instance_info:
+      filters:
+        "tag:Name": '{{ aws_name_tag_value }}'
+      region: '{{ aws_region }}'
+      aws_access_key: '{{ aws_access_key }}'
+      aws_secret_key: '{{ aws_secret_key }}'
+    register: instance_info
+
+  - name: Fetching Instance ID
+    set_fact:
+      instance_id={{ instance_info | json_query('instances[*].instance_id') | join }}
+
+  - name: Deregister a target from a target group
+    community.aws.elb_target:
+      target_group_name: '{{ target_group_name }}'
+      target_id: '{{ instance_id }}'
+      target_port: '{{ item }}'
+      region: '{{ aws_region }}'
+      aws_access_key: '{{ aws_access_key }}'
+      aws_secret_key: '{{ aws_secret_key }}'
+      state: absent
+    with_items:
+      - "{{ target_port.split(',') }}"
