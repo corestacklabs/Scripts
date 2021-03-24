@@ -6,6 +6,8 @@ mkdir -p /opt/core/cache
 
 mkfs -t ext4 /dev/sdc1
 
+mount  /dev/sdc1 /opt/core/cache
+
 cmp_cache_uuid=$(blkid -s UUID -o value /dev/sdc1)
 
 echo "UUID=$cmp_cache_uuid /opt/core/cache/ ext4    defaults,nofail 0 0" >> /etc/fstab
