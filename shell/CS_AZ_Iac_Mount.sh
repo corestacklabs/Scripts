@@ -10,10 +10,10 @@ mkdir -p /opt/core/cache
 (echo n; echo p; echo 1; echo 2048; echo;  echo w) | fdisk /dev/sde
 (echo n; echo p; echo 1; echo 2048; echo;  echo w) | fdisk /dev/sdf
 
-mkfs -t ext4 /dev/sdc1
-mkfs -t ext4 /dev/sdd1
-mkfs -t ext4 /dev/sde1
-mkfs -t ext4  /dev/sdf1
+mkfs -t xfs /dev/sdc1
+mkfs -t xfs /dev/sdd1
+mkfs -t xfs /dev/sde1
+mkfs -t xfs  /dev/sdf1
 
 mount /dev/sdc1/ /var/lib/mongo
 mount /dev/sdd1 /var/log/mongo
