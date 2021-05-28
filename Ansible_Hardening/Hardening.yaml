@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  roles:
+    - { role: RHEL7-CIS }
+  become: true
+ 
+
+
+
